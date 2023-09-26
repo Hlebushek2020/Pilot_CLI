@@ -7,41 +7,36 @@ namespace PilotCLI.Pilot;
 
 public class PilotContext : IDisposable
 {
-    private ISettings? _settings;
+    private ContextEntry? _settings;
     private HttpPilotClient? _httpPilotClient;
+
+    #region Properties
+    public bool IsInstalled => _settings != null;
+    public string? ServerUrl => _settings?.PilotServerUrl;
+    public string? Database => _settings?.PilotServerDatabase;
+    public string? Username => _settings?.PilotServerUsername;
+    public int LicenseCode => _settings?.PilotServerLicenseCode ?? -1;
+    #endregion
 
     public PilotRepository? Repository { get; private set; }
 
-    public void ChangeContext(ISettings settings)
+    public void ChangeContext(ContextEntry? settings)
     {
         _settings = settings;
-        //_httpPilotClient = new HttpPilotClient(_settings.PilotServerUrl);
-    }
-
-    /// <summary>
-    /// Connects to the pilot database with the specified parameters in the settings. After this, property
-    /// <see cref="DataSenderToAlfa.Pilot.PilotContext.Repository"/> will become available.
-    /// </summary>
-    /// <returns>
-    /// <see cref="Ascon.Pilot.DataClasses.DDatabaseInfo"/> object representing information about the database.
-    /// </returns>
-    public DDatabaseInfo Connect()
-    {
-        Console.WriteLine($"[{GetType().FullName}] Connecting to the pilot ...");
+        _httpPilotClient = new HttpPilotClient(_settings.PilotServerUrl);
+        Console.WriteLine("Connecting to the pilot ...");
         _httpPilotClient.Connect(false);
         PilotServerCallback serverCallback = new PilotServerCallback();
         IServerApi serverApi = _httpPilotClient.GetServerApi(serverCallback);
         Repository = new PilotRepository(serverApi, serverCallback);
-
-        Console.WriteLine($"[{GetType().FullName}] Authentication in the pilot's database ...");
+        Console.WriteLine("Authentication in the pilot's database ...");
         IAuthenticationApi authApi = _httpPilotClient.GetAuthenticationApi();
-       /* authApi.Login(
+        authApi.Login(
             _settings.PilotServerDatabase,
             _settings.PilotServerUsername,
             _settings.PilotServerPassword.EncryptAes(),
             _settings.PilotServerUseWindowsAuth,
-            _settings.PilotServerLicenseCode);*/
-        return serverApi.OpenDatabase();
+            _settings.PilotServerLicenseCode);
     }
 
     protected virtual void Dispose(bool disposing)

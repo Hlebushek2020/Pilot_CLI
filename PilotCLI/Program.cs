@@ -7,6 +7,8 @@ namespace PilotCLI
 {
     internal class Program
     {
+        public const string TitleTemplate = "Pilot CLI [ {0} ]";
+
         #region Fields
         private static readonly PilotContext _pilotCtx = new PilotContext();
         private static readonly CommandManager _commandManager = new CommandManager();
@@ -17,10 +19,11 @@ namespace PilotCLI
 
         static void Main(string[] args)
         {
+            Console.Title = string.Format(TitleTemplate, "none");
+
             if (!Settings.Availability())
             {
-                ConsoleUtils.WriteLineWarning(
-                    "The configuration file has been created! Fill it out and restart the program!");
+                Console.WriteLine("The configuration file has been created! Fill it out and restart the program!");
                 Console.ReadLine();
                 return;
             }
@@ -30,17 +33,31 @@ namespace PilotCLI
             bool isNotExit = true;
             do
             {
+                Console.Write("> ");
                 string? commandLine = Console.ReadLine()?.Trim();
                 if ("exit".Equals(commandLine?.ToLower()))
+                {
                     isNotExit = false;
+                }
                 else
-                    _commandManager.Process(commandLine);
+                {
+                    try
+                    {
+                        _commandManager.Process(commandLine);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
+                }
             } while (isNotExit);
         }
 
         private static void RegisterCommands(ISettings settings)
         {
-            _commandManager.RegisterCommand("set-context", new PilotChangeContextCommand(_pilotCtx, settings));
+            _commandManager.RegisterCommand(new SetContextCommand(_pilotCtx, settings));
+            _commandManager.RegisterCommand(new ObjectCommand(_pilotCtx));
+            _commandManager.RegisterCommand(new HelpCommand());
         }
     }
 }

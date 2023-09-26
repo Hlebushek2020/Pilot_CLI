@@ -10,7 +10,9 @@
     <ItemGroup>
       <PackageReference Include="Ascon.Pilot.Server.Api" Version="23.30.462" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+
     </ItemGroup>
+
 
 
 

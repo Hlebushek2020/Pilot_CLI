@@ -1,11 +1,14 @@
-﻿namespace PilotCLI.Commands;
+﻿using PilotCLI.Commands.Base;
+
+namespace PilotCLI.Commands;
 
 public class CommandManager
 {
-    private readonly Dictionary<string, ICommandHandler> _commands = new Dictionary<string, ICommandHandler>();
+    private readonly Dictionary<string, ICommand> _commands = new Dictionary<string, ICommand>();
 
-    public bool RegisterCommand(string command, ICommandHandler commandHandler) =>
-        _commands.TryAdd(command.ToLower(), commandHandler);
+    public IReadOnlyDictionary<string, ICommand> Commands => _commands;
+
+    public bool RegisterCommand(ICommand command) => _commands.TryAdd(command.Name, command);
 
     public bool Process(string? commandLine)
     {
@@ -16,14 +19,14 @@ public class CommandManager
         int index = commandLine.IndexOf(' ');
         string command = index != -1 ? commandLine[..index].ToLower() : commandLine.ToLower();
 
-        if (!_commands.TryGetValue(command, out ICommandHandler? commandHandler))
+        if (!_commands.TryGetValue(command, out ICommand? commandHandler))
         {
-            ConsoleUtils.WriteLineWarning($"Command \"{command}\" not found");
+            Console.WriteLine($"Command \"{command}\" not found!");
             return false;
         }
 
         string? commandArgs = index != -1 ? commandLine.Remove(0, index + 1) : null;
-        commandHandler.Execute(commandArgs);
+        commandHandler.Execute(new CommandContext(commandArgs, this));
 
         return true;
     }
