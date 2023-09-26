@@ -57,6 +57,8 @@ namespace PilotCLI
         {
             _commandManager.RegisterCommand(new SetContextCommand(_pilotCtx, settings));
             _commandManager.RegisterCommand(new ObjectCommand(_pilotCtx));
+            _commandManager.RegisterCommand(new TypeCommand());
+            _commandManager.RegisterCommand(new UserStateCommand());
             _commandManager.RegisterCommand(new HelpCommand());
         }
     }
