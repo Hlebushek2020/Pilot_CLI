@@ -26,11 +26,7 @@ public class PilotRepository : IPilotServerCallbackListener
     /// where each object <see cref="Ascon.Pilot.DataClasses.DObject"/> describes an object from the database with a
     /// certain <see cref="System.Guid"/>
     /// </returns>
-    public IReadOnlyList<DObject> GetObjects(IEnumerable<Guid> guids)
-    {
-        Console.WriteLine($"[{GetType().FullName}] GetObjects");
-        return _serverApi.GetObjects(guids.ToArray());
-    }
+    public IReadOnlyList<DObject> GetObjects(IEnumerable<Guid> guids) => _serverApi.GetObjects(guids.ToArray());
 
     /// <summary>
     /// Gets information on the specified object

@@ -27,6 +27,32 @@ public class ObjectCommand : ICommand
                     foreach (DChild child in @object.Children)
                         Console.WriteLine($"{child.TypeId}\t{child.ObjectId}");
                 }
+            },
+            {
+                "relations", (@object) =>
+                {
+                    Console.WriteLine("Id\tTarget\tType");
+                    foreach (DRelation relation in @object.Relations)
+                        Console.WriteLine($"{relation.Id}\t{relation.Type}\t{relation.Type}");
+                }
+            },
+            {
+                "attributes", (@object) =>
+                {
+                    foreach (KeyValuePair<string, DValue> attribute in @object.Attributes)
+                    {
+                        object value = attribute.Value.Value;
+                        if (attribute.Value.ArrayValue != null)
+                        {
+                            value = string.Join("; ", attribute.Value.ArrayValue);
+                        }
+                        else if (attribute.Value.ArrayIntValue != null)
+                        {
+                            value = string.Join("; ", attribute.Value.ArrayIntValue.Select(iv => iv.ToString()));
+                        }
+                        Console.WriteLine($"{attribute.Key}: {value}");
+                    }
+                }
             }
         };
     }
@@ -65,6 +91,7 @@ public class ObjectCommand : ICommand
         for (int numObj = 0; numObj < objects.Count; numObj++)
         {
             DObject dObject = objects[numObj];
+            Console.WriteLine($"======== {dObject.Id} ========");
             foreach (string select in objectCommandArgs.Select)
                 _selectProcessing[select].Invoke(dObject);
             if (numObj < objects.Count - 1)

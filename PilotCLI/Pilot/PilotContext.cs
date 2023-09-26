@@ -37,6 +37,7 @@ public class PilotContext : IDisposable
             _settings.PilotServerPassword.EncryptAes(),
             _settings.PilotServerUseWindowsAuth,
             _settings.PilotServerLicenseCode);
+        serverApi.OpenDatabase();
     }
 
     protected virtual void Dispose(bool disposing)
