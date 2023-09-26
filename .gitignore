@@ -1,0 +1,9 @@
+/.idea
+/.vs
+/packages
+**/Output
+**/bin
+**/obj
+*Thumbs.db
+*.user
+*.DS_Store
