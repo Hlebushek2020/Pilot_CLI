@@ -32,11 +32,11 @@ public class HelpCommand : ICommand
 
     public void Help()
     {
-        Console.ForegroundColor = ConsoleColor.DarkYellow;
+        Console.ForegroundColor = CommandConstants.CommandColor;
         Console.WriteLine(Name);
         Console.ResetColor();
         Console.WriteLine(Description);
-        Console.ForegroundColor = ConsoleColor.DarkYellow;
+        Console.ForegroundColor = CommandConstants.CommandColor;
         Console.WriteLine($"{Name} <command>");
         Console.ResetColor();
         Console.WriteLine("Shows help on \"command\"");
