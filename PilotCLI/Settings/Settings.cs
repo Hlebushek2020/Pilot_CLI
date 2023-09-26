@@ -7,6 +7,7 @@ public class Settings : ISettings
 {
     private static readonly string _settingsPath = Path.Combine(Program.Directory, "settings.json");
 
+    [JsonProperty("contexts")]
     public IReadOnlyDictionary<string, ContextEntry> Contexts { get; } = new Dictionary<string, ContextEntry>
     {
         { "example", new ContextEntry() }
