@@ -7,14 +7,16 @@ namespace PilotCLI.Commands;
 
 public class ObjectCommand : ICommand
 {
+    private readonly ISettings _settings;
     private readonly PilotContext _pilotCtx;
     private readonly Dictionary<string, Action<DObject>> _selectProcessing;
 
     public string Name { get; } = "object";
     public string Description { get; } = "Displays certain information about the specified object";
 
-    public ObjectCommand(PilotContext pilotCtx)
+    public ObjectCommand(ISettings settings, PilotContext pilotCtx)
     {
+        _settings = settings;
         _pilotCtx = pilotCtx;
         _selectProcessing = new Dictionary<string, Action<DObject>>
         {
@@ -23,17 +25,21 @@ public class ObjectCommand : ICommand
             {
                 "children", (@object) =>
                 {
+                    Console.WriteLine(new string(CommandConstants.TableSeparator, CommandConstants.SeparatorLength));
                     Console.WriteLine("Type\tObject");
                     foreach (DChild child in @object.Children)
                         Console.WriteLine($"{child.TypeId}\t{child.ObjectId}");
+                    Console.WriteLine(new string(CommandConstants.TableSeparator, CommandConstants.SeparatorLength));
                 }
             },
             {
                 "relations", (@object) =>
                 {
+                    Console.WriteLine(new string(CommandConstants.TableSeparator, CommandConstants.SeparatorLength));
                     Console.WriteLine("Id\tTarget\tType");
                     foreach (DRelation relation in @object.Relations)
-                        Console.WriteLine($"{relation.Id}\t{relation.Type}\t{relation.Type}");
+                        Console.WriteLine($"{relation.Id}\t{relation.TargetId}\t{relation.Type}");
+                    Console.WriteLine(new string(CommandConstants.TableSeparator, CommandConstants.SeparatorLength));
                 }
             },
             {
@@ -91,11 +97,11 @@ public class ObjectCommand : ICommand
         for (int numObj = 0; numObj < objects.Count; numObj++)
         {
             DObject dObject = objects[numObj];
-            Console.WriteLine($"======== {dObject.Id} ========");
+            Console.WriteLine($"Object: {dObject.Id}");
             foreach (string select in objectCommandArgs.Select)
                 _selectProcessing[select].Invoke(dObject);
             if (numObj < objects.Count - 1)
-                Console.WriteLine(new string('=', 30));
+                Console.WriteLine(new string(CommandConstants.ObjectSeparator, CommandConstants.SeparatorLength));
         }
 
         return true;
@@ -103,9 +109,9 @@ public class ObjectCommand : ICommand
 
     public void Help()
     {
-        Console.ForegroundColor = CommandConstants.CommandColor;
+        Console.ForegroundColor = _settings.CommandSignatureColor;
         Console.WriteLine($"{Name} <guid> select [ {string.Join(" | ", _selectProcessing.Keys)} ]");
-        Console.ResetColor();
+        Console.ForegroundColor = _settings.OtherTextColor;
         Console.WriteLine(Description);
     }
 }

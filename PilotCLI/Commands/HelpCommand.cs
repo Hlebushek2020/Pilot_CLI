@@ -4,10 +4,16 @@ namespace PilotCLI.Commands;
 
 public class HelpCommand : ICommand
 {
+    private readonly ISettings _settings;
+
     public string Name { get; } = "help";
     public string Description { get; } = "Show all commands";
 
-    public HelpCommand() { Console.WriteLine("Type \"help\" to view a list of commands"); }
+    public HelpCommand(ISettings settings)
+    {
+        _settings = settings;
+        Console.WriteLine("Type \"help\" to view a list of commands");
+    }
 
     public bool Execute(CommandContext commandCtx)
     {
@@ -20,25 +26,30 @@ public class HelpCommand : ICommand
         {
             foreach (KeyValuePair<string, ICommand> pair in commandCtx.Manager.Commands)
             {
-                Console.ForegroundColor = CommandConstants.CommandColor;
+                Console.ForegroundColor = _settings.CommandSignatureColor;
                 Console.Write(pair.Key);
+                Console.ForegroundColor = _settings.OtherTextColor;
                 Console.Write(": ");
-                Console.ResetColor();
                 Console.WriteLine(pair.Value.Description);
             }
+
+            Console.ForegroundColor = _settings.CommandSignatureColor;
+            Console.Write("exit");
+            Console.ForegroundColor = _settings.OtherTextColor;
+            Console.WriteLine(": Close the console");
         }
         return true;
     }
 
     public void Help()
     {
-        Console.ForegroundColor = CommandConstants.CommandColor;
+        Console.ForegroundColor = _settings.CommandSignatureColor;
         Console.WriteLine(Name);
-        Console.ResetColor();
+        Console.ForegroundColor = _settings.OtherTextColor;
         Console.WriteLine(Description);
-        Console.ForegroundColor = CommandConstants.CommandColor;
+        Console.ForegroundColor = _settings.CommandSignatureColor;
         Console.WriteLine($"{Name} <command>");
-        Console.ResetColor();
+        Console.ForegroundColor = _settings.OtherTextColor;
         Console.WriteLine("Shows help on \"command\"");
     }
 }

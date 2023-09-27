@@ -7,19 +7,29 @@ namespace PilotCLI.Commands;
 
 public class TypeCommand : ICommand
 {
+    private readonly ISettings _settings;
     private readonly PilotContext _pilotCtx;
     private readonly Dictionary<string, Action<MType>> _selectProcessing;
 
     public string Name { get; } = "type";
     public string Description { get; } = "Shows type information";
 
-    public TypeCommand(PilotContext pilotCtx)
+    public TypeCommand(ISettings settings, PilotContext pilotCtx)
     {
+        _settings = settings;
         _pilotCtx = pilotCtx;
         _selectProcessing = new Dictionary<string, Action<MType>>
         {
             { "name", (type) => { Console.WriteLine($"Name: {type.Name}"); } },
-            { "title", (type) => { Console.WriteLine($"Title: {type.Title}"); } }
+            { "title", (type) => { Console.WriteLine($"Title: {type.Title}"); } },
+            { "children", (type) => { Console.WriteLine($"Children: {string.Join("; ", type.Children)}"); } },
+            {
+                "attributes", (type) =>
+                {
+                    foreach (MAttribute attribute in type.Attributes)
+                        Console.WriteLine($"{attribute.Name}: {attribute.Type}");
+                }
+            }
         };
     }
 
@@ -77,13 +87,13 @@ public class TypeCommand : ICommand
 
     public void Help()
     {
-        Console.ForegroundColor = CommandConstants.CommandColor;
+        Console.ForegroundColor = _settings.CommandSignatureColor;
         Console.WriteLine($"{Name} --refresh");
-        Console.ResetColor();
+        Console.ForegroundColor = _settings.OtherTextColor;
         Console.WriteLine("Updates all metadata (types and user states)");
-        Console.ForegroundColor = CommandConstants.CommandColor;
+        Console.ForegroundColor = _settings.CommandSignatureColor;
         Console.WriteLine($"{Name} <guid> select [ {string.Join(" | ", _selectProcessing.Keys)} ]");
-        Console.ResetColor();
+        Console.ForegroundColor = _settings.OtherTextColor;
         Console.WriteLine(Description);
     }
 }

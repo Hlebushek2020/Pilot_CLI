@@ -2,5 +2,7 @@
 
 public static class CommandConstants
 {
-    public const ConsoleColor CommandColor = ConsoleColor.DarkYellow;
+    public const int SeparatorLength = 60;
+    public const char ObjectSeparator = '=';
+    public const char TableSeparator = '-';
 }

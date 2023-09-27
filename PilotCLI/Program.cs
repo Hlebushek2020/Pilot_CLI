@@ -23,18 +23,22 @@ namespace PilotCLI
 
             if (!Settings.Availability())
             {
-                Console.WriteLine("The configuration file has been created! Fill it out and restart the program!");
+                Console.WriteLine($"The configuration file (\"{Settings.SettingsPath
+                }\") has been created! Fill it out and restart the program!");
                 Console.ReadLine();
                 return;
             }
 
-            RegisterCommands(Settings.Load());
+            ISettings settings = Settings.Load();
+            RegisterCommands(settings);
 
             bool isNotExit = true;
             do
             {
+                Console.ForegroundColor = settings.CommandColor;
                 Console.Write("> ");
                 string? commandLine = Console.ReadLine()?.Trim();
+                Console.ForegroundColor = settings.OtherTextColor;
                 if ("exit".Equals(commandLine?.ToLower()))
                 {
                     isNotExit = false;
@@ -55,12 +59,12 @@ namespace PilotCLI
 
         private static void RegisterCommands(ISettings settings)
         {
-            _commandManager.RegisterCommand(new SetContextCommand(_pilotCtx, settings));
-            _commandManager.RegisterCommand(new ObjectCommand(_pilotCtx));
-            _commandManager.RegisterCommand(new TypeCommand(_pilotCtx));
-            //_commandManager.RegisterCommand(new UserStateCommand(_pilotCtx));
-            //_commandManager.RegisterCommand(new StateMachineCommand(_pilotCtx));
-            _commandManager.RegisterCommand(new HelpCommand());
+            _commandManager.RegisterCommand(new SetContextCommand(settings, _pilotCtx));
+            _commandManager.RegisterCommand(new ObjectCommand(settings, _pilotCtx));
+            _commandManager.RegisterCommand(new TypeCommand(settings, _pilotCtx));
+            //_commandManager.RegisterCommand(new UserStateCommand(settings, _pilotCtx));
+            //_commandManager.RegisterCommand(new StateMachineCommand(settings, _pilotCtx));
+            _commandManager.RegisterCommand(new HelpCommand(settings));
         }
     }
 }

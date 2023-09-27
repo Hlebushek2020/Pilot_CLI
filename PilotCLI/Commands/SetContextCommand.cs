@@ -15,7 +15,7 @@ public class SetContextCommand : ICommand
     public string Name { get; } = "set-context";
     public string Description { get; } = "Change pilot configuration";
 
-    public SetContextCommand(PilotContext pilotCtx, ISettings settings)
+    public SetContextCommand(ISettings settings, PilotContext pilotCtx)
     {
         _settings = settings;
         _pilotCtx = pilotCtx;
@@ -62,17 +62,17 @@ public class SetContextCommand : ICommand
 
     public void Help()
     {
-        Console.ForegroundColor = CommandConstants.CommandColor;
+        Console.ForegroundColor = _settings.CommandSignatureColor;
         Console.WriteLine(Name);
-        Console.ResetColor();
+        Console.ForegroundColor = _settings.OtherTextColor;
         Console.WriteLine("Show a list of available contexts");
-        Console.ForegroundColor = CommandConstants.CommandColor;
+        Console.ForegroundColor = _settings.CommandSignatureColor;
         Console.WriteLine($"{Name} --current");
-        Console.ResetColor();
+        Console.ForegroundColor = _settings.OtherTextColor;
         Console.WriteLine("Show the currently set context");
-        Console.ForegroundColor = CommandConstants.CommandColor;
+        Console.ForegroundColor = _settings.CommandSignatureColor;
         Console.WriteLine($"{Name} <context>");
-        Console.ResetColor();
+        Console.ForegroundColor = _settings.OtherTextColor;
         Console.WriteLine("Sets the specified context");
     }
 }
