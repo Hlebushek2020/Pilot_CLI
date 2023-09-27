@@ -28,7 +28,7 @@ public class PilotContext : IDisposable
         _httpPilotClient.Connect(false);
         PilotServerCallback serverCallback = new PilotServerCallback();
         IServerApi serverApi = _httpPilotClient.GetServerApi(serverCallback);
-        Repository = new PilotRepository(serverApi, serverCallback);
+        Repository = new PilotRepository(serverApi);
         Console.WriteLine("Authentication in the pilot's database ...");
         IAuthenticationApi authApi = _httpPilotClient.GetAuthenticationApi();
         authApi.Login(
@@ -38,6 +38,7 @@ public class PilotContext : IDisposable
             _settings.PilotServerUseWindowsAuth,
             _settings.PilotServerLicenseCode);
         serverApi.OpenDatabase();
+        Repository.RefreshMetadata();
     }
 
     protected virtual void Dispose(bool disposing)

@@ -3,19 +3,17 @@ using Ascon.Pilot.Server.Api.Contracts;
 
 namespace PilotCLI.Pilot;
 
-public class PilotRepository : IPilotServerCallbackListener
+public class PilotRepository
 {
     private readonly IServerApi _serverApi;
-    private readonly PilotServerCallback _serverCallback;
 
-    private TaskCompletionSource<DSearchResult> _searchCompletionSource;
+    #region Properties
+    public IReadOnlyDictionary<int, MType> Types { get; private set; }
+    public IReadOnlyDictionary<Guid, MUserState> UserStates { get; private set; }
+    public IReadOnlyDictionary<Guid, MUserStateMachine> StateMachines { get; private set; }
+    #endregion
 
-    public PilotRepository(IServerApi serverApi, PilotServerCallback serverCallback)
-    {
-        _serverApi = serverApi;
-        _serverCallback = serverCallback;
-        _serverCallback.SetCallbackListener(this);
-    }
+    public PilotRepository(IServerApi serverApi) { _serverApi = serverApi; }
 
     /// <summary>
     /// Gets information on the specified objects
@@ -28,67 +26,11 @@ public class PilotRepository : IPilotServerCallbackListener
     /// </returns>
     public IReadOnlyList<DObject> GetObjects(IEnumerable<Guid> guids) => _serverApi.GetObjects(guids.ToArray());
 
-    /// <summary>
-    /// Gets information on the specified object
-    /// </summary>
-    /// <param name="guid"><see cref="System.Guid"/> for which information needs to be obtained</param>
-    /// <returns>
-    /// <see cref="Ascon.Pilot.DataClasses.DObject"/> describing an object from a database with a specific <see cref="System.Guid"/>
-    /// </returns>
-    public DObject GetObject(Guid guid) => _serverApi.GetObjects(new[] { guid }).First();
-
-    /// <summary>
-    /// Retrieves information about all types of the current database.
-    /// </summary>
-    /// <returns>
-    /// A <see cref="System.Collections.Generic.IReadOnlyDictionary{TKey,TValue}"/> where the TKey is the name of the
-    /// type, the TValue is an object <see cref="Ascon.Pilot.DataClasses.MType"/> describing this type
-    /// </returns>
-    public IReadOnlyDictionary<string, MType> GetTypes()
+    public void RefreshMetadata()
     {
-        Console.WriteLine($"[{GetType().FullName}] GetTypes");
-        return _serverApi.GetMetadata(_serverApi.GetDatabaseInfo().MetadataVersion).Types.ToDictionary(ks => ks.Name);
-    }
-
-    /// <summary>
-    /// Retrieves information about all user states from the database.
-    /// </summary>
-    /// <returns>
-    /// A <see cref="System.Collections.Generic.IReadOnlyDictionary{TKey,TValue}"/> where the TKey is the
-    /// <see cref="System.Guid"/> of the user state, the TValue is an object <see cref="Ascon.Pilot.DataClasses.MUserState"/>
-    /// describing this user state
-    /// </returns>
-    public IReadOnlyDictionary<Guid, MUserState> GetUserStates()
-    {
-        Console.WriteLine($"[{GetType().FullName}] GetUserStates");
-        return _serverApi.GetMetadata(_serverApi.GetDatabaseInfo().MetadataVersion).UserStates
-            .ToDictionary(ks => ks.Id);
-    }
-
-    /// <summary>
-    /// Searches for objects using the specified condition and with the specified parameters
-    /// </summary>
-    /// <param name="searchDefinition">
-    /// Object <see cref="Ascon.Pilot.DataClasses.DSearchDefinition"/> describing the search condition and search parameters
-    /// </param>
-    /// <returns>Object <see cref="Ascon.Pilot.DataClasses.DSearchResult"/> describing the search results</returns>
-    public Task<DSearchResult> Search(DSearchDefinition searchDefinition)
-    {
-        Console.WriteLine($"[{GetType().FullName}] Search");
-        _searchCompletionSource = new TaskCompletionSource<DSearchResult>();
-        _serverApi.AddSearch(searchDefinition);
-        return _searchCompletionSource.Task;
-    }
-
-    public void Notify(DSearchResult result)
-    {
-        try
-        {
-            _searchCompletionSource.SetResult(result);
-        }
-        catch (Exception e)
-        {
-            _searchCompletionSource.TrySetException(e);
-        }
+        DMetadata metadata = _serverApi.GetMetadata(_serverApi.GetDatabaseInfo().MetadataVersion);
+        Types = metadata.Types.ToDictionary(ks => ks.Id);
+        UserStates = metadata.UserStates.ToDictionary(ks => ks.Id);
+        StateMachines = metadata.StateMachines.ToDictionary(ks => ks.Id);
     }
 }

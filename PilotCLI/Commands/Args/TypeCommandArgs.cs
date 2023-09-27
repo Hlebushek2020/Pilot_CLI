@@ -1,26 +1,28 @@
 ﻿namespace PilotCLI.Commands.Args;
 
-public class ObjectCommandArgs
+public class TypeCommandArgs
 {
-    public ICollection<Guid> Objects { get; }
-    public ICollection<string> Select { get; }
+    public IList<int> Types { get; }
+    public IList<string> Select { get; }
 
-    private ObjectCommandArgs(ICollection<Guid> objects, ICollection<string> select)
+    private TypeCommandArgs(IList<int> types, IList<string> select)
     {
-        Objects = objects;
+        Types = types;
         Select = select;
     }
 
-    public static ObjectCommandArgs Parse(string args, ISet<string> aviableSelect)
+    public static TypeCommandArgs Parse(string args, ISet<string> aviableSelect)
     {
         string[] parts = args.Split(' ');
         int index = 0;
         string part;
 
-        List<Guid> guids = new List<Guid>();
+        List<int> guids = new List<int>();
         while (index < parts.Length && !"select".Equals((part = parts[index])))
         {
-            guids.Add(Guid.Parse(part));
+            if (int.TryParse(part, out int intValue))
+                guids.Add(intValue);
+
             index++;
         }
 
@@ -35,6 +37,6 @@ public class ObjectCommandArgs
             index++;
         }
 
-        return new ObjectCommandArgs(guids, select);
+        return new TypeCommandArgs(guids, select);
     }
 }
