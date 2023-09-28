@@ -23,8 +23,9 @@ namespace PilotCLI
 
             if (!Settings.Availability())
             {
-                Console.WriteLine($"The configuration file (\"{Settings.SettingsPath
-                }\") has been created! Fill it out and restart the program!");
+                Console.WriteLine(
+                    $"The configuration file (\"{Settings.SettingsPath
+                    }\") has been created! Fill it out and restart the program!");
                 Console.ReadLine();
                 return;
             }

@@ -24,19 +24,19 @@
 ### Доступные цвета
 Строковое значение|Цифровое значение|Цвет
 -|-|-
-`"Black"`|`0`| <div style="height: 16px; width: 16px; background-color:#000000"></div>
-`"DarkBlue"`|`1`|
-`"DarkGreen"`|`2`|
-`"DarkCyan"`|`3`|
-`"DarkRed"`|`4`|
-`"DarkMagenta"`|`5`|
-`"DarkYellow"`|`6`|
-`"Gray"`|`7`|
-`"DarkGray"`|`8`|
-`"Blue"`|`9`|
-`"Green"`|`10`|
-`"Cyan"`|`11`|
-`"Red"`|`12`|
-`"Magenta"`|`13`|
-`"Yellow"`|`14`|
-`"White"`|`15`|
+`"Black"`|`0`|#000000
+`"DarkBlue"`|`1`|#00008b
+`"DarkGreen"`|`2`|#006400
+`"DarkCyan"`|`3`|#008b8b
+`"DarkRed"`|`4`|#8b0000
+`"DarkMagenta"`|`5`|#8b008b
+`"DarkYellow"`|`6`|#808000
+`"Gray"`|`7`|#808080
+`"DarkGray"`|`8`|#a9a9a9
+`"Blue"`|`9`|#0000ff
+`"Green"`|`10`|#008000
+`"Cyan"`|`11`|#00ffff
+`"Red"`|`12`|#ff0000
+`"Magenta"`|`13`|#ff00ff
+`"Yellow"`|`14`|#ffff00
+`"White"`|`15`|#ffffff
