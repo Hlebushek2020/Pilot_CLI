@@ -92,7 +92,7 @@ public class TypeCommand : ICommand
         Console.ForegroundColor = _settings.OtherTextColor;
         Console.WriteLine("Updates all metadata (types and user states)");
         Console.ForegroundColor = _settings.CommandSignatureColor;
-        Console.WriteLine($"{Name} <guid> select [ {string.Join(" | ", _selectProcessing.Keys)} ]");
+        Console.WriteLine($"{Name} [ <id> ... ] select [ {string.Join(" ", _selectProcessing.Keys)} ]");
         Console.ForegroundColor = _settings.OtherTextColor;
         Console.WriteLine(Description);
     }

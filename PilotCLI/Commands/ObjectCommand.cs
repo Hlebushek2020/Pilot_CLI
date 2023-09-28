@@ -110,7 +110,7 @@ public class ObjectCommand : ICommand
     public void Help()
     {
         Console.ForegroundColor = _settings.CommandSignatureColor;
-        Console.WriteLine($"{Name} <guid> select [ {string.Join(" | ", _selectProcessing.Keys)} ]");
+        Console.WriteLine($"{Name} [ <guid> ... ] select [ {string.Join(" ", _selectProcessing.Keys)} ]");
         Console.ForegroundColor = _settings.OtherTextColor;
         Console.WriteLine(Description);
     }
