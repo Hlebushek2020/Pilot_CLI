@@ -24,19 +24,19 @@
 ### Доступные цвета
 Строковое значение|Цифровое значение|Цвет
 -|-|-
-`"Black"`|`0`|#000000
-`"DarkBlue"`|`1`|#00008b
-`"DarkGreen"`|`2`|#006400
-`"DarkCyan"`|`3`|#008b8b
-`"DarkRed"`|`4`|#8b0000
-`"DarkMagenta"`|`5`|#8b008b
-`"DarkYellow"`|`6`|#808000
-`"Gray"`|`7`|#808080
-`"DarkGray"`|`8`|#a9a9a9
-`"Blue"`|`9`|#0000ff
-`"Green"`|`10`|#008000
-`"Cyan"`|`11`|#00ffff
-`"Red"`|`12`|#ff0000
-`"Magenta"`|`13`|#ff00ff
-`"Yellow"`|`14`|#ffff00
-`"White"`|`15`|#ffffff
+`"Black"`|`0`|[#000000](https://color2.ru/000000)
+`"DarkBlue"`|`1`|[#00008b](https://color2.ru/00008b)
+`"DarkGreen"`|`2`|[#006400](https://color2.ru/006400)
+`"DarkCyan"`|`3`|[#008b8b](https://color2.ru/008b8b)
+`"DarkRed"`|`4`|[#8b0000](https://color2.ru/8b0000)
+`"DarkMagenta"`|`5`|[#8b008b](https://color2.ru/8b008b)
+`"DarkYellow"`|`6`|[#808000](https://color2.ru/808000)
+`"Gray"`|`7`|[#808080](https://color2.ru/808080)
+`"DarkGray"`|`8`|[#a9a9a9](https://color2.ru/a9a9a9)
+`"Blue"`|`9`|[#0000ff](https://color2.ru/0000ff)
+`"Green"`|`10`|[#008000](https://color2.ru/008000)
+`"Cyan"`|`11`|[#00ffff](https://color2.ru/00ffff)
+`"Red"`|`12`|[#ff0000](https://color2.ru/ff0000)
+`"Magenta"`|`13`|[#ff00ff](https://color2.ru/ff00ff)
+`"Yellow"`|`14`|[#ffff00](https://color2.ru/ffff00)
+`"White"`|`15`|[#ffffff](https://color2.ru/ffffff)
