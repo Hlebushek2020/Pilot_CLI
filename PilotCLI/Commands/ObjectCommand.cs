@@ -25,11 +25,15 @@ public class ObjectCommand : ICommand
             {
                 "children", (@object) =>
                 {
-                    Console.WriteLine(new string(CommandConstants.TableSeparator, CommandConstants.SeparatorLength));
-                    Console.WriteLine("Type\tObject");
+                    TableProcessor tableProcessor = new TableProcessor("children");
+                    tableProcessor.AddColumn("Type");
+                    tableProcessor.AddColumn("Object");
                     foreach (DChild child in @object.Children)
-                        Console.WriteLine($"{child.TypeId}\t{child.ObjectId}");
-                    Console.WriteLine(new string(CommandConstants.TableSeparator, CommandConstants.SeparatorLength));
+                    {
+                        tableProcessor.AddValue(0, child.TypeId.ToString());
+                        tableProcessor.AddValue(1, child.ObjectId.ToString());
+                    }
+                    tableProcessor.Print();
                 }
             },
             {
