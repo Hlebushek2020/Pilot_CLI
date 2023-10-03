@@ -1,13 +1,13 @@
 ﻿namespace PilotCLI.Commands.Base;
 
-public class TableProcessor
+public class ConsoleTable
 {
     private readonly List<Column> _columns = new List<Column>();
     private readonly string _tableTitle;
 
-    private int fullLenght = 0;
+    private int _fullLenght = 0;
 
-    public TableProcessor(string tableTitle) { _tableTitle = tableTitle; }
+    public ConsoleTable(string tableTitle) { _tableTitle = tableTitle; }
 
     public void AddColumn(string title)
     {
@@ -17,17 +17,21 @@ public class TableProcessor
             MaxLenght = title.Length,
             Values = new List<string>()
         };
-        fullLenght += column.MaxLenght;
+        _fullLenght += column.MaxLenght;
         _columns.Add(column);
     }
 
-    public void AddValue(int columnIndex, string value)
+    public void AddValue(int columnIndex, object value) => AddValue(columnIndex, value.ToString());
+
+    public void AddValue(int columnIndex, string? value)
     {
+        value ??= string.Empty;
+
         Column column = _columns[columnIndex];
 
         if (value.Length > column.MaxLenght)
         {
-            fullLenght += value.Length - column.MaxLenght;
+            _fullLenght += value.Length - column.MaxLenght;
             column.MaxLenght = value.Length;
         }
 
@@ -38,7 +42,7 @@ public class TableProcessor
     {
         if (_columns.Count > 0)
         {
-            int lenghtSep = 3 * (_columns.Count - 1) + fullLenght + 2;
+            int lenghtSep = 3 * (_columns.Count - 1) + _fullLenght + 2;
             int titlePartCount = (lenghtSep - _tableTitle.Length) / 2;
             Console.Write(new string('-', titlePartCount));
             Console.Write($" {_tableTitle} ");
