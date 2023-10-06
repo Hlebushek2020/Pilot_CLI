@@ -30,8 +30,9 @@ public class ObjectCommand : ICommand
                     consoleTable.AddColumn("Object");
                     foreach (DChild child in @object.Children)
                     {
-                        consoleTable.AddValue(0, child.TypeId);
-                        consoleTable.AddValue(1, child.ObjectId);
+                        ConsoleTable.Row row = consoleTable.AddRow();
+                        row.SetAnyValue(0, child.TypeId);
+                        row.SetAnyValue(1, child.ObjectId);
                     }
                     consoleTable.Print();
                 }
@@ -39,11 +40,18 @@ public class ObjectCommand : ICommand
             {
                 "relations", (@object) =>
                 {
-                    Console.WriteLine(new string(CommandConstants.TableSeparator, CommandConstants.SeparatorLength));
-                    Console.WriteLine("Id\tTarget\tType");
+                    ConsoleTable consoleTable = new ConsoleTable("relations");
+                    consoleTable.AddColumn("Id");
+                    consoleTable.AddColumn("Target");
+                    consoleTable.AddColumn("Type");
                     foreach (DRelation relation in @object.Relations)
-                        Console.WriteLine($"{relation.Id}\t{relation.TargetId}\t{relation.Type}");
-                    Console.WriteLine(new string(CommandConstants.TableSeparator, CommandConstants.SeparatorLength));
+                    {
+                        ConsoleTable.Row row = consoleTable.AddRow();
+                        row.SetAnyValue(0, relation.Id);
+                        row.SetAnyValue(1, relation.TargetId);
+                        row.SetAnyValue(2, relation.Type);
+                    }
+                    consoleTable.Print();
                 }
             },
             {
