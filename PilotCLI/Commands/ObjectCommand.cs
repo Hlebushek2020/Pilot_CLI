@@ -89,7 +89,8 @@ public class ObjectCommand : ICommand
 
                         string typeName = "-";
                         if (objectById.TryGetValue(guid, out DObject? ctxObj) &&
-                            _pilotCtx.Repository.Types.TryGetValue(ctxObj.TypeId, out MType? ctxObjType))
+                            _pilotCtx.Repository.Types.TryGetValue(ctxObj.TypeId, out MType? ctxObjType) &&
+                            !string.IsNullOrWhiteSpace(ctxObjType.Name))
                         {
                             typeName = ctxObjType.Name;
                         }
