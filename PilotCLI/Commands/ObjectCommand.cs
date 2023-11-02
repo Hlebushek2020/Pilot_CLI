@@ -71,6 +71,32 @@ public class ObjectCommand : ICommand
                         Console.WriteLine($"{attribute.Key}: {value}");
                     }
                 }
+            },
+            {
+                "context", (@object) =>
+                {
+                    IReadOnlyDictionary<Guid, DObject> objectById = _pilotCtx.Repository
+                        .GetObjects(@object.Context)
+                        .ToDictionary(ks => ks.Id);
+
+                    ConsoleTable consoleTable = new ConsoleTable("context");
+                    consoleTable.AddColumn("Id");
+                    consoleTable.AddColumn("Type");
+                    foreach (Guid guid in @object.Context)
+                    {
+                        ConsoleTable.Row row = consoleTable.AddRow();
+                        row.SetAnyValue(0, guid);
+
+                        string typeName = "-";
+                        if (objectById.TryGetValue(guid, out DObject? ctxObj) &&
+                            _pilotCtx.Repository.Types.TryGetValue(ctxObj.TypeId, out MType? ctxObjType))
+                        {
+                            typeName = ctxObjType.Name;
+                        }
+                        row.SetAnyValue(0, typeName);
+                    }
+                    consoleTable.Print();
+                }
             }
         };
     }
