@@ -20,19 +20,34 @@ public class ObjectCommand : ICommand
         _pilotCtx = pilotCtx;
         _selectProcessing = new Dictionary<string, Action<DObject>>
         {
-            { "type", (@object) => { Console.WriteLine($"Type: {@object.TypeId}"); } },
+            {
+                "type", (@object) =>
+                {
+                    string typeName = "-";
+                    if (_pilotCtx.Repository.Types.TryGetValue(@object.TypeId, out MType? type))
+                        typeName = type.Id.ToString();
+                    Console.WriteLine($"Type: {typeName} (Id: {@object.TypeId})");
+                }
+            },
             { "parent", (@object) => { Console.WriteLine($"Parent: {@object.ParentId}"); } },
             {
                 "children", (@object) =>
                 {
                     ConsoleTable consoleTable = new ConsoleTable("children");
                     consoleTable.AddColumn("Type");
+                    consoleTable.AddColumn("Type Id");
                     consoleTable.AddColumn("Object");
                     foreach (DChild child in @object.Children)
                     {
                         ConsoleTable.Row row = consoleTable.AddRow();
-                        row.SetAnyValue(0, child.TypeId);
-                        row.SetAnyValue(1, child.ObjectId);
+
+                        string typeName = "-";
+                        if (_pilotCtx.Repository.Types.TryGetValue(child.TypeId, out MType? type))
+                            typeName = type.Id.ToString();
+                        row.SetAnyValue(0, typeName);
+
+                        row.SetAnyValue(1, child.TypeId);
+                        row.SetAnyValue(2, child.ObjectId);
                     }
                     consoleTable.Print();
                 }
