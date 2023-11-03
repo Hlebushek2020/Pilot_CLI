@@ -124,6 +124,12 @@ public class ObjectCommand : ICommand
             return false;
         }
 
+        if (!_pilotCtx.IsInstalled)
+        {
+            Console.WriteLine($"Command \"{Name}\" cannot be executed because the context is not set");
+            return false;
+        }
+
         ObjectCommandArgs objectCommandArgs = ObjectCommandArgs.Parse(
             commandCtx.Args,
             _selectProcessing.Keys.ToHashSet());
@@ -131,12 +137,6 @@ public class ObjectCommand : ICommand
         if (objectCommandArgs.Objects.Count == 0)
         {
             Console.WriteLine($"Incorrect command \"{Name}\"");
-            return false;
-        }
-
-        if (!_pilotCtx.IsInstalled)
-        {
-            Console.WriteLine($"Command \"{Name}\" cannot be executed because the context is not set");
             return false;
         }
 

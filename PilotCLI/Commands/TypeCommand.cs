@@ -47,12 +47,6 @@ public class TypeCommand : ICommand
             return false;
         }
 
-        if ("--refresh".Equals(commandCtx.Args))
-        {
-            _pilotCtx.Repository.RefreshMetadata();
-            return true;
-        }
-
         TypeCommandArgs typeCommandArgs = TypeCommandArgs.Parse(
             commandCtx.Args,
             _selectProcessing.Keys.ToHashSet());
@@ -87,10 +81,6 @@ public class TypeCommand : ICommand
 
     public void Help()
     {
-        Console.ForegroundColor = _settings.CommandSignatureColor;
-        Console.WriteLine($"{Name} --refresh");
-        Console.ForegroundColor = _settings.OtherTextColor;
-        Console.WriteLine("Updates all metadata (types and user states)");
         Console.ForegroundColor = _settings.CommandSignatureColor;
         Console.WriteLine($"{Name} [ <id> ... ] select [ {string.Join(" ", _selectProcessing.Keys)} ]");
         Console.ForegroundColor = _settings.OtherTextColor;
