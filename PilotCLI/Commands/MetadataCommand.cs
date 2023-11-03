@@ -65,7 +65,16 @@ public class MetadataCommand : ICommand
             return false;
         }
 
-        MetadataCommandArgs commandArgs = MetadataCommandArgs.Parse(commandCtx.Args);
+        MetadataCommandArgs commandArgs = MetadataCommandArgs.Parse(commandCtx.Args, _arguments.Keys.ToHashSet());
+
+        if (commandArgs.Args.Count == 0)
+        {
+            Console.WriteLine($"Incorrect command \"{Name}\"");
+            return false;
+        }
+
+        foreach (string arg in commandArgs.Args)
+            _arguments[arg]();
 
         return true;
     }
