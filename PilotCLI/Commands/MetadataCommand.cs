@@ -7,8 +7,8 @@ namespace PilotCLI.Commands;
 
 public class MetadataCommand : ICommand
 {
+    private readonly ISettings _settings;
     private readonly PilotContext _pilotCtx;
-    private ISettings _settings;
     private readonly Dictionary<string, Action> _arguments;
 
     public string Name { get; } = "metadata";
