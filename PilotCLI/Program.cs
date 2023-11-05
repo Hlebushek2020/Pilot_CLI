@@ -37,7 +37,7 @@ namespace PilotCLI
             do
             {
                 Console.ForegroundColor = settings.CommandColor;
-                Console.Write("> ");
+                Console.Write("# ");
                 string? commandLine = Console.ReadLine()?.Trim();
                 Console.ForegroundColor = settings.OtherTextColor;
                 if ("exit".Equals(commandLine?.ToLower()))

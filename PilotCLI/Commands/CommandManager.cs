@@ -31,7 +31,7 @@ public class CommandManager
 
         bool isOverride = false;
         string commandArgs = commandLine.Remove(0, index + 1);
-        int fileIndex = commandArgs.LastIndexOf('>');
+        int fileIndex = commandArgs.IndexOf('>');
         if (fileIndex != -1)
         {
             string filePath = commandArgs[fileIndex..];
