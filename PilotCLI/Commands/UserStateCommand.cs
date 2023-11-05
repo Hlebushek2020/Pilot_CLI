@@ -18,6 +18,7 @@ public class UserStateCommand : ICommand
     {
         _settings = settings;
         _pilotCtx = pilotCtx;
+
         _selectProcessing = new Dictionary<string, Action<MUserState>>
         {
             { "name", (userState) => { Console.WriteLine($"Name: {userState.Name}"); } },
