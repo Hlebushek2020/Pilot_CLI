@@ -33,10 +33,9 @@ public class StateMachineCommand : ICommand
                     consoleTable.AddColumn("To State");
                     foreach (KeyValuePair<Guid, MTransition[]> stateTransition in mState.StateTransitions)
                     {
-
                         if (stateTransition.Value == null)
                             continue;
-                        
+
                         foreach (MTransition transition in stateTransition.Value)
                         {
                             ConsoleTable.Row row = consoleTable.AddRow();
@@ -58,7 +57,6 @@ public class StateMachineCommand : ICommand
 
                             row.SetAnyValue(3, transition.StateTo);
                             Console.WriteLine(transition.StateTo);
-
 
                             stateName = "-";
                             if (_pilotCtx.Repository.UserStates.TryGetValue(transition.StateTo, out userState))
@@ -123,7 +121,8 @@ public class StateMachineCommand : ICommand
     public void Help()
     {
         Console.ForegroundColor = _settings.CommandSignatureColor;
-        Console.WriteLine($"{Name} [ <guid> ... ] select [ {string.Join(" ", _selectProcessing.Keys)} ]");
+        Console.WriteLine($"{Name} [ GUID ... ] select [ {string.Join(" ", _selectProcessing.Keys)} ] {
+            CommandManager.OutputToFile}");
         Console.ForegroundColor = _settings.OtherTextColor;
         Console.WriteLine(Description);
     }

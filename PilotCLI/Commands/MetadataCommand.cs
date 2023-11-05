@@ -121,7 +121,7 @@ public class MetadataCommand : ICommand
     public void Help()
     {
         Console.ForegroundColor = _settings.CommandSignatureColor;
-        Console.WriteLine($"{Name} [ <ARG> ... ]");
+        Console.WriteLine($"{Name} [ ARG ... ] {CommandManager.OutputToFile}");
         Console.WriteLine("   ARG is:");
         Console.Write("      --refresh");
         Console.ForegroundColor = _settings.OtherTextColor;

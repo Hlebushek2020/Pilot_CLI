@@ -1,19 +1,10 @@
 ﻿namespace PilotCLI.Commands.Args;
 
-public class MetadataCommandArgs : ICommandArg
+public class MetadataCommandArgs
 {
-    #region Properties
-    public bool AppendToFile { get; }
-    public string? FilePath { get; }
     public ICollection<string> Args { get; }
-    #endregion
 
-    private MetadataCommandArgs(bool appendToFile, string? filePath, ICollection<string> args)
-    {
-        AppendToFile = appendToFile;
-        FilePath = filePath;
-        Args = args;
-    }
+    private MetadataCommandArgs(bool appendToFile, string? filePath, ICollection<string> args) { Args = args; }
 
     public static MetadataCommandArgs Parse(string args, ISet<string> aviableArgs)
     {

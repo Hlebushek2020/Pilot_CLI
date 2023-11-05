@@ -63,15 +63,15 @@ public class SetContextCommand : ICommand
     public void Help()
     {
         Console.ForegroundColor = _settings.CommandSignatureColor;
-        Console.WriteLine(Name);
+        Console.WriteLine($"{Name} {CommandManager.OutputToFile}");
         Console.ForegroundColor = _settings.OtherTextColor;
         Console.WriteLine("Show a list of available contexts");
         Console.ForegroundColor = _settings.CommandSignatureColor;
-        Console.WriteLine($"{Name} --current");
+        Console.WriteLine($"{Name} --current {CommandManager.OutputToFile}");
         Console.ForegroundColor = _settings.OtherTextColor;
         Console.WriteLine("Show the currently set context");
         Console.ForegroundColor = _settings.CommandSignatureColor;
-        Console.WriteLine($"{Name} <context>");
+        Console.WriteLine($"{Name} CONTEXT {CommandManager.OutputToFile}");
         Console.ForegroundColor = _settings.OtherTextColor;
         Console.WriteLine("Sets the specified context");
     }

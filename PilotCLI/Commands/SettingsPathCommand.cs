@@ -20,7 +20,7 @@ public class SettingsPathCommand : ICommand
     public void Help()
     {
         Console.ForegroundColor = _settings.CommandSignatureColor;
-        Console.WriteLine(Name);
+        Console.WriteLine($"{Name} {CommandManager.OutputToFile}");
         Console.ForegroundColor = _settings.OtherTextColor;
         Console.WriteLine(Description);
     }

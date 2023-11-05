@@ -81,7 +81,8 @@ public class UserStateCommand : ICommand
     public void Help()
     {
         Console.ForegroundColor = _settings.CommandSignatureColor;
-        Console.WriteLine($"{Name} [ <guid> ... ] select [ {string.Join(" ", _selectProcessing.Keys)} ]");
+        Console.WriteLine($"{Name} [ GUID ... ] select [ {string.Join(" ", _selectProcessing.Keys)} ] {
+            CommandManager.OutputToFile}");
         Console.ForegroundColor = _settings.OtherTextColor;
         Console.WriteLine(Description);
     }
