@@ -1,21 +1,17 @@
 ﻿namespace PilotCLI.Commands.Args;
 
-public class MetadataCommandArgs : ICommandArg
+public class CommandArg : ICommandArg
 {
-    #region Properties
     public bool AppendToFile { get; }
     public string? FilePath { get; }
-    public ICollection<string> Args { get; }
-    #endregion
 
-    private MetadataCommandArgs(bool appendToFile, string? filePath, ICollection<string> args)
+    private CommandArg(bool appendToFile, string? filePath)
     {
         AppendToFile = appendToFile;
         FilePath = filePath;
-        Args = args;
     }
 
-    public static MetadataCommandArgs Parse(string args, ISet<string> aviableArgs)
+    public static CommandArg Parse(string args, ISet<string> aviableArgs)
     {
         string? filePath = null;
         bool isOverride = false;
@@ -35,15 +31,7 @@ public class MetadataCommandArgs : ICommandArg
                     filePath = filePath.Remove(0, 1).Trim();
                 }
             }
-            args = args.Remove(fileIndex);
         }
-
-        List<string> argList = new List<string>();
-        foreach (string arg in args.Replace("  ", " ").Trim().Split(' '))
-        {
-            if (aviableArgs.Contains(arg))
-                argList.Add(arg);
-        }
-        return new MetadataCommandArgs(isOverride, filePath, argList);
+        return new CommandArg(isOverride, filePath);
     }
 }
