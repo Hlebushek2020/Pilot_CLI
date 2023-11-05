@@ -67,7 +67,7 @@ namespace PilotCLI
             //_commandManager.RegisterCommand(new StateMachineCommand(settings, _pilotCtx));
             _commandManager.RegisterCommand(new TypeCommand(settings, _pilotCtx));
             _commandManager.RegisterCommand(new MetadataCommand(settings, _pilotCtx));
-            //_commandManager.RegisterCommand(new UserStateCommand(settings, _pilotCtx));
+            _commandManager.RegisterCommand(new UserStateCommand(settings, _pilotCtx));
         }
     }
 }

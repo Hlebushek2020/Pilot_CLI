@@ -20,9 +20,16 @@ public class UserStateCommand : ICommand
         _pilotCtx = pilotCtx;
         _selectProcessing = new Dictionary<string, Action<MUserState>>
         {
-            { "name", (userState) => { } },
-            { "title", (userState) => { } },
-            { "flags", (userState) => { } }
+            { "name", (userState) => { Console.WriteLine($"Name: {userState.Name}"); } },
+            { "title", (userState) => { Console.WriteLine($"Title: {userState.Title}"); } },
+            {
+                "flags", (userState) =>
+                {
+                    Console.WriteLine($"Is deleted: {userState.IsDeleted}");
+                    Console.WriteLine($"Is completion state: {userState.IsCompletionState}");
+                    Console.WriteLine($"Is system state: {userState.IsSystemState}");
+                }
+            }
         };
     }
 
@@ -70,5 +77,11 @@ public class UserStateCommand : ICommand
         return true;
     }
 
-    public void Help() { throw new NotImplementedException(); }
+    public void Help()
+    {
+        Console.ForegroundColor = _settings.CommandSignatureColor;
+        Console.WriteLine($"{Name} [ <guid> ... ] select [ {string.Join(" ", _selectProcessing.Keys)} ]");
+        Console.ForegroundColor = _settings.OtherTextColor;
+        Console.WriteLine(Description);
+    }
 }
