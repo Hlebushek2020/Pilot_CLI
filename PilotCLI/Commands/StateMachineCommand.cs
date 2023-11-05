@@ -19,7 +19,61 @@ public class StateMachineCommand : ICommand
         _settings = settings;
         _pilotCtx = pilotCtx;
 
-        _selectProcessing = new Dictionary<string, Action<MUserStateMachine>>();
+        _selectProcessing = new Dictionary<string, Action<MUserStateMachine>>
+        {
+            { "title", (mState) => { Console.WriteLine($"Title: {mState.Title}"); } },
+            {
+                "transitions", (mState) =>
+                {
+                    ConsoleTable consoleTable = new ConsoleTable("transitions");
+                    consoleTable.AddColumn("State Id");
+                    consoleTable.AddColumn("State");
+                    consoleTable.AddColumn("Transition");
+                    consoleTable.AddColumn("To State Id");
+                    consoleTable.AddColumn("To State");
+                    foreach (KeyValuePair<Guid, MTransition[]> stateTransition in mState.StateTransitions)
+                    {
+
+                        if (stateTransition.Value == null)
+                            continue;
+                        
+                        foreach (MTransition transition in stateTransition.Value)
+                        {
+                            ConsoleTable.Row row = consoleTable.AddRow();
+                            row.SetAnyValue(0, stateTransition.Key);
+                            Console.WriteLine(stateTransition.Key);
+
+                            string stateName = "-";
+                            if (_pilotCtx.Repository.UserStates.TryGetValue(stateTransition.Key,
+                                    out MUserState? userState))
+                            {
+                                stateName = userState.Title;
+                            }
+
+                            row.SetAnyValue(1, stateName);
+                            Console.WriteLine(stateName);
+
+                            row.SetAnyValue(2, transition.DisplayName);
+                            Console.WriteLine(transition.DisplayName);
+
+                            row.SetAnyValue(3, transition.StateTo);
+                            Console.WriteLine(transition.StateTo);
+
+
+                            stateName = "-";
+                            if (_pilotCtx.Repository.UserStates.TryGetValue(transition.StateTo, out userState))
+                                stateName = userState.Title;
+
+                            row.SetAnyValue(4, stateName);
+                            Console.WriteLine(stateName);
+
+                            Console.WriteLine(new string('=', 30));
+                        }
+                    }
+                    consoleTable.Print();
+                }
+            }
+        };
     }
 
     public bool Execute(CommandContext commandCtx)
@@ -47,7 +101,7 @@ public class StateMachineCommand : ICommand
         }
 
         if (objectCommandArgs.Select.Count == 0)
-            objectCommandArgs.Select.Add("name");
+            objectCommandArgs.Select.Add("title");
 
         bool printObjSep = false;
         foreach (Guid usGuid in objectCommandArgs.Objects)
