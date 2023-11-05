@@ -49,6 +49,7 @@ public class CommandManager
             }
             commandArgs = commandArgs.Remove(fileIndex);
             outToFile = new OutToFile(Console.Out, filePath, isOverride);
+            Console.SetOut(outToFile);
         }
 
         commandHandler.Execute(new CommandContext(commandArgs, this));
