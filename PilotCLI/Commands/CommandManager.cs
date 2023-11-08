@@ -4,7 +4,7 @@ namespace PilotCLI.Commands;
 
 public class CommandManager
 {
-    public const string OutputToFile = "[ >> > ] FILE";
+    public const string OutputToFile = "[ [ >> > ] FILE ]";
 
     private readonly Dictionary<string, ICommand> _commands = new Dictionary<string, ICommand>();
 
@@ -30,7 +30,7 @@ public class CommandManager
         OutToFile? outToFile = null;
 
         bool isOverride = false;
-        string commandArgs = commandLine.Remove(0, index + 1);
+        string commandArgs = index != -1 ? commandLine.Remove(0, index + 1) : string.Empty;
         int fileIndex = commandArgs.IndexOf('>');
         if (fileIndex != -1)
         {
