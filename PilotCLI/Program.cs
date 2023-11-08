@@ -31,6 +31,7 @@ namespace PilotCLI
             }
 
             ISettings settings = Settings.Load();
+            System.IO.Directory.SetCurrentDirectory(settings.WorkingFolder);
             RegisterCommands(settings);
 
             bool isNotExit = true;

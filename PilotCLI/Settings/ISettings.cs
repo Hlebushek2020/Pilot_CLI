@@ -14,6 +14,8 @@ public interface ISettings
     /// </summary>
     IReadOnlyDictionary<string, ContextEntry> Contexts { get; }
 
+    public string WorkingFolder { get; }
+
     /// <summary>
     /// Command signature output color
     /// </summary>
