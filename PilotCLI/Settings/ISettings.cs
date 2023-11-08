@@ -15,6 +15,11 @@ public interface ISettings
     IReadOnlyDictionary<string, ContextEntry> Contexts { get; }
 
     /// <summary>
+    /// Working folder
+    /// </summary>
+    public string WorkingFolder { get; }
+
+    /// <summary>
     /// Command signature output color
     /// </summary>
     ConsoleColor CommandSignatureColor { get; }

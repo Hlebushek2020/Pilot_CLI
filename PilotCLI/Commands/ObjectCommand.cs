@@ -20,26 +20,53 @@ public class ObjectCommand : ICommand
         _pilotCtx = pilotCtx;
         _selectProcessing = new Dictionary<string, Action<DObject>>
         {
-            { "type", (@object) => { Console.WriteLine($"Type: {@object.TypeId}"); } },
+            {
+                "type", (@object) =>
+                {
+                    string typeName = "-";
+                    if (_pilotCtx.Repository.Types.TryGetValue(@object.TypeId, out MType? type))
+                        typeName = type.Id.ToString();
+                    Console.WriteLine($"Type: {typeName} (Id: {@object.TypeId})");
+                }
+            },
             { "parent", (@object) => { Console.WriteLine($"Parent: {@object.ParentId}"); } },
             {
                 "children", (@object) =>
                 {
-                    Console.WriteLine(new string(CommandConstants.TableSeparator, CommandConstants.SeparatorLength));
-                    Console.WriteLine("Type\tObject");
+                    ConsoleTable consoleTable = new ConsoleTable("children");
+                    consoleTable.AddColumn("Type");
+                    consoleTable.AddColumn("Type Id");
+                    consoleTable.AddColumn("Object");
                     foreach (DChild child in @object.Children)
-                        Console.WriteLine($"{child.TypeId}\t{child.ObjectId}");
-                    Console.WriteLine(new string(CommandConstants.TableSeparator, CommandConstants.SeparatorLength));
+                    {
+                        ConsoleTable.Row row = consoleTable.AddRow();
+
+                        string typeName = "-";
+                        if (_pilotCtx.Repository.Types.TryGetValue(child.TypeId, out MType? type))
+                            typeName = type.Id.ToString();
+                        row.SetAnyValue(0, typeName);
+
+                        row.SetAnyValue(1, child.TypeId);
+                        row.SetAnyValue(2, child.ObjectId);
+                    }
+                    consoleTable.Print();
                 }
             },
             {
                 "relations", (@object) =>
                 {
-                    Console.WriteLine(new string(CommandConstants.TableSeparator, CommandConstants.SeparatorLength));
-                    Console.WriteLine("Id\tTarget\tType");
+                    ConsoleTable consoleTable = new ConsoleTable("relations");
+                    consoleTable.AddColumn("Id");
+                    consoleTable.AddColumn("Target");
+                    consoleTable.AddColumn("Type");
                     foreach (DRelation relation in @object.Relations)
-                        Console.WriteLine($"{relation.Id}\t{relation.TargetId}\t{relation.Type}");
-                    Console.WriteLine(new string(CommandConstants.TableSeparator, CommandConstants.SeparatorLength));
+                    {
+                        ConsoleTable.Row row = consoleTable.AddRow();
+                        row.SetAnyValue(0, relation.Id);
+                        row.SetAnyValue(1, relation.TargetId);
+                        row.SetAnyValue(2, relation.Type);
+                    }
+                    consoleTable.Print();
                 }
             },
             {
@@ -59,6 +86,32 @@ public class ObjectCommand : ICommand
                         Console.WriteLine($"{attribute.Key}: {value}");
                     }
                 }
+            },
+            {
+                "context", (@object) =>
+                {
+                    IReadOnlyDictionary<Guid, DObject> objectById = _pilotCtx.Repository
+                        .GetObjects(@object.Context)
+                        .ToDictionary(ks => ks.Id);
+
+                    ConsoleTable consoleTable = new ConsoleTable("context");
+                    consoleTable.AddColumn("Id");
+                    consoleTable.AddColumn("Type");
+                    foreach (Guid guid in @object.Context)
+                    {
+                        ConsoleTable.Row row = consoleTable.AddRow();
+                        row.SetAnyValue(0, guid);
+
+                        string typeName = "-";
+                        if (objectById.TryGetValue(guid, out DObject? ctxObj) &&
+                            _pilotCtx.Repository.Types.TryGetValue(ctxObj.TypeId, out MType? ctxObjType))
+                        {
+                            typeName = ctxObjType.Name;
+                        }
+                        row.SetAnyValue(1, typeName);
+                    }
+                    consoleTable.Print();
+                }
             }
         };
     }
@@ -71,6 +124,12 @@ public class ObjectCommand : ICommand
             return false;
         }
 
+        if (!_pilotCtx.IsInstalled)
+        {
+            Console.WriteLine($"Command \"{Name}\" cannot be executed because the context is not set");
+            return false;
+        }
+
         ObjectCommandArgs objectCommandArgs = ObjectCommandArgs.Parse(
             commandCtx.Args,
             _selectProcessing.Keys.ToHashSet());
@@ -78,12 +137,6 @@ public class ObjectCommand : ICommand
         if (objectCommandArgs.Objects.Count == 0)
         {
             Console.WriteLine($"Incorrect command \"{Name}\"");
-            return false;
-        }
-
-        if (!_pilotCtx.IsInstalled)
-        {
-            Console.WriteLine($"Command \"{Name}\" cannot be executed because the context is not set");
             return false;
         }
 
@@ -110,7 +163,8 @@ public class ObjectCommand : ICommand
     public void Help()
     {
         Console.ForegroundColor = _settings.CommandSignatureColor;
-        Console.WriteLine($"{Name} [ <guid> ... ] select [ {string.Join(" ", _selectProcessing.Keys)} ]");
+        Console.WriteLine($"{Name} [ GUID ... ] select [ {string.Join(" ", _selectProcessing.Keys)} ] {
+            CommandManager.OutputToFile}");
         Console.ForegroundColor = _settings.OtherTextColor;
         Console.WriteLine(Description);
     }

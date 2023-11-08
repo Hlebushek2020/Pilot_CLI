@@ -44,12 +44,12 @@ public class HelpCommand : ICommand
     public void Help()
     {
         Console.ForegroundColor = _settings.CommandSignatureColor;
-        Console.WriteLine(Name);
+        Console.WriteLine($"{Name} {CommandManager.OutputToFile}");
         Console.ForegroundColor = _settings.OtherTextColor;
         Console.WriteLine(Description);
         Console.ForegroundColor = _settings.CommandSignatureColor;
-        Console.WriteLine($"{Name} <command>");
+        Console.WriteLine($"{Name} COMMAND {CommandManager.OutputToFile}");
         Console.ForegroundColor = _settings.OtherTextColor;
-        Console.WriteLine("Shows help on \"command\"");
+        Console.WriteLine("Shows help on \"COMMAND\"");
     }
 }

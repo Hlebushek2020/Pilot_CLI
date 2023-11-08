@@ -11,6 +11,9 @@ public class Settings : ISettings
     [JsonProperty("contexts")]
     public IReadOnlyDictionary<string, ContextEntry> Contexts { get; set; } = new Dictionary<string, ContextEntry>();
 
+    [JsonProperty("working_folder")]
+    public string WorkingFolder { get; set; } = Directory.GetCurrentDirectory();
+
     [JsonProperty("command_signature_color")]
     public ConsoleColor CommandSignatureColor { get; set; } = ConsoleColor.DarkYellow;
 
