@@ -14,6 +14,9 @@ public interface ISettings
     /// </summary>
     IReadOnlyDictionary<string, ContextEntry> Contexts { get; }
 
+    /// <summary>
+    /// Working folder
+    /// </summary>
     public string WorkingFolder { get; }
 
     /// <summary>
