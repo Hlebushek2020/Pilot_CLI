@@ -1,6 +1,7 @@
 ﻿# Pilot CLI
 
-![image](https://github.com/Hlebushek2020/Pilot_CLI/assets/63193749/0e35a8d3-2181-45da-9d0f-616fec5e5903)
+![image](https://github.com/Hlebushek2020/Pilot_CLI/assets/63193749/19426cfa-3e61-4405-aec3-9e1276be28e0)
+
 
 ## Требования
 - [.NET Runtime 7](https://dotnet.microsoft.com/en-us/download/dotnet/7.0)
