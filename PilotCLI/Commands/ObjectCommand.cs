@@ -25,7 +25,7 @@ public class ObjectCommand : ICommand
                 {
                     string typeName = "-";
                     if (_pilotCtx.Repository.Types.TryGetValue(@object.TypeId, out MType? type))
-                        typeName = type.Id.ToString();
+                        typeName = type.Name;
                     Console.WriteLine($"Type: {typeName} (Id: {@object.TypeId})");
                 }
             },
