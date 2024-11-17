@@ -25,7 +25,7 @@ public class ObjectCommand : ICommand
                 {
                     string typeName = "-";
                     if (_pilotCtx.Repository.Types.TryGetValue(@object.TypeId, out MType? type))
-                        typeName = type.Id.ToString();
+                        typeName = type.Name;
                     Console.WriteLine($"Type: {typeName} (Id: {@object.TypeId})");
                 }
             },
@@ -43,9 +43,9 @@ public class ObjectCommand : ICommand
 
                         string typeName = "-";
                         if (_pilotCtx.Repository.Types.TryGetValue(child.TypeId, out MType? type))
-                            typeName = type.Id.ToString();
-                        row.SetAnyValue(0, typeName);
+                            typeName = type.Name;
 
+                        row.SetAnyValue(0, typeName);
                         row.SetAnyValue(1, child.TypeId);
                         row.SetAnyValue(2, child.ObjectId);
                     }
@@ -109,6 +109,42 @@ public class ObjectCommand : ICommand
                             typeName = ctxObjType.Name;
                         }
                         row.SetAnyValue(1, typeName);
+                    }
+                    consoleTable.Print();
+                }
+            },
+            {
+                "files", (@object) =>
+                {
+                    IReadOnlyDictionary<Guid, DObject> objectById = _pilotCtx.Repository
+                        .GetObjects(@object.Context)
+                        .ToDictionary(ks => ks.Id);
+
+                    ConsoleTable consoleTable = new ConsoleTable("files");
+                    consoleTable.AddColumn("Name");
+                    consoleTable.AddColumn("Id");
+                    consoleTable.AddColumn("Created");
+                    consoleTable.AddColumn("Modified");
+                    consoleTable.AddColumn("Size");
+                    foreach (DFile file in @object.ActualFileSnapshot.Files)
+                    {
+                        ConsoleTable.Row row = consoleTable.AddRow();
+                        row.SetAnyValue(0, file.Name);
+                        row.SetAnyValue(1, "-");
+                        row.SetAnyValue(2, "-");
+                        row.SetAnyValue(3, "-");
+                        row.SetAnyValue(4, "-");
+
+                        if (file.Body != null)
+                        {
+                            row.SetAnyValue(1, file.Body.Id);
+                            row.SetAnyValue(2, file.Body.Created);
+                            row.SetAnyValue(3, file.Body.Modified);
+
+                            double size = double.Round(file.Body.Size / 1024.0, 2);
+
+                            row.SetAnyValue(4, $"{size} Kb");
+                        }
                     }
                     consoleTable.Print();
                 }
